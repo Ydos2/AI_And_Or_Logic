@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+
+import sys
+import random
+import math
+
+class Neuron:
+    def __init__(self, l):
+        self._activate = 0
+        self._gradient = 0
+        self._bias = random.uniform(-1, 1)
+        self._weights = []
+        self.inputs = [[0, 0], [0, 1], [1, 0], [1, 1]]
+        self.result = [0, 0, 0, 1]
+        for i in range(0, l):
+            self._weights.append(random.uniform(-1, 1))
+
+def h():
+    print("USAGE")
+    print("\t./AI_Greg")
+    print("")
+    print("DESCRIPTION")
+    print("\tthis is Greg's first draft")
+
+def train(struct):
+    for nbr_train_2 in range(0, 1000):
+        for nbr_train in range(0, 4):
+            activation(struct, nbr_train)
+            compute_gradient(struct, nbr_train)
+            update_weights(struct, nbr_train)
+    for nbr_train in range(0, 4):
+        activation(struct, nbr_train)
+        print(struct._activate)
+
+def activation(struct, nbr_train):
+    sp = struct._bias + (struct.inputs[nbr_train][0] * struct._weights[0]) + (struct.inputs[nbr_train][1] * struct._weights[1])
+    struct._activate = (1 / (1 + math.exp(-sp)))
+
+def compute_gradient(struct, nbr_train):
+    struct._gradient = struct.result[nbr_train] - struct._activate
+
+def update_weights(struct, nbr_train):
+    LearningRate = 0.9
+    struct._bias = struct._bias + (struct._gradient * LearningRate)
+    struct._weights[0] = struct._weights[0] + (struct._gradient * LearningRate * struct.inputs[nbr_train][0])
+    struct._weights[1] = struct._weights[0] + (struct._gradient * LearningRate * struct.inputs[nbr_train][1])
+
+def main():
+    av = sys.argv
+    l = len(sys.argv)
+    if (l == 2):
+        if (av[1] == "-h"):
+            h()
+    else:
+        struct = Neuron(3)
+        train(struct)
+
+if __name__ == "__main__":
+    main()
